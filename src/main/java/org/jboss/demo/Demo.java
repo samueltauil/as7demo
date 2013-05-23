@@ -1,8 +1,12 @@
 package org.jboss.demo;
 
+import org.jboss.as.controller.client.ModelControllerClient;
+import org.jboss.dmr.ModelNode;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +40,12 @@ public class Demo {
 
         JButton jButton1 = new JButton("Instance 1");
         jButton1.setPreferredSize(new Dimension(300, 300));
-        jButton1.setIcon(red);
+        if(checkInstanceStatus("server-one")){
+            jButton1.setIcon(green);
+        } else {
+            jButton1.setIcon(red);
+        }
+
 
         JButton jButton2 = new JButton("Instance 2");
         jButton2.setIcon(red);
@@ -74,5 +83,28 @@ public class Demo {
         jFrame.setVisible(true);
     }
 
+    public static boolean checkInstanceStatus(String instanceName) throws IOException {
+
+        ModelControllerClient client = ModelControllerClient.Factory.create(
+                InetAddress.getByName("127.0.0.1"), 9999);
+        ModelNode modelNode = new ModelNode();
+
+        ModelNode op = new ModelNode();
+        op.get("operation").set("read-attribute");
+
+        ModelNode address = op.get("address");
+        address.add("host", "master");
+        address.add("server", instanceName);
+
+        op.get("name").set("server-state");
+
+
+        ModelNode returnVal = client.execute(op);
+        String result = returnVal.get("result").toString();
+
+        if(result.contains("running")) return true;
+
+        return false;
+    }
 
 }
