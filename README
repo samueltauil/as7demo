@@ -1,1 +1,6 @@
-This file was created by IntelliJ IDEA 12.0.4 for binding GitHub repository
+AS 7 Demo Game
+
+The main idea of this project is to have 6 instances running on Domain mode inside JBoss AS 7.
+Also the user will be able to stop all of them, but the app will start every time he stops,
+so the challenge is stop all instances before JBoss starts another one.
+
