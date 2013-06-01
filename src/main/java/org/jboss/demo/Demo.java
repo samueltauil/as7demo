@@ -98,7 +98,7 @@ public class Demo {
 
         op.get("name").set("server-state");
 
-
+        System.out.println("running command: " + op.asString());
         ModelNode returnVal = client.execute(op);
         String result = returnVal.get("result").toString();
 
